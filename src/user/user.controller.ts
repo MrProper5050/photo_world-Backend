@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { Injector } from '@nestjs/core/injector/injector';
 import { UserService } from './user.service';
 import { createUserDto } from './dto/createUser.dto'
+import { LoginUserDto } from './dto/loginUser.dto';
 
 @Controller('api/user')
 export class UserController {
@@ -13,10 +14,16 @@ export class UserController {
         return this.userService.findAll()
     }
 
-    @Post('create')
-    create(@Body() data: createUserDto){
+    @Post('registr')
+    registration(@Body() data: createUserDto){
         // console.log('data:', data )
         return this.userService.create(data)
+    }
+
+    @Post('login')
+    loginSystem(@Body() data: LoginUserDto){
+        // console.log('data:', data )
+        return this.userService.login(data)
     }
 
     @Delete('/remove/:id')
