@@ -7,17 +7,20 @@ export class AuthMiddleware implements NestMiddleware {
 
     switch (req.originalUrl) {
       case "/auth/login":
-        if(req.cookies['access_token']) return res.redirect('/')
+        console.log('req.cookies:',req.signedCookies)
+        if(req.signedCookies['access_token']) return res.redirect('/')
         next();
         break;
       case "/auth/reg":
-        if(req.cookies['access_token']) return res.redirect('/')
+        if(req.signedCookies['access_token']) return res.redirect('/')
         next();
         break;
       case "/profile":
-        if(!req.cookies['access_token']) return res.status(401).json({message:'Unauthorized'})
+        if(!req.signedCookies['access_token']) return res.status(401).json({message:'Unauthorized'})
 
-        const token = req.cookies['access_token']
+        const token = req.signedCookies['access_token']
+
+        console.log('1)--TOKEN:',token)
 
         try {
           const decoded = jwt.verify(token, process.env.JWT_SECRECT)

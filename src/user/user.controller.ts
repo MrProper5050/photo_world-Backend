@@ -15,19 +15,28 @@ export class UserController {
         return this.userService.findAll()
     }
 
-    @Post('registr')
-    registration(@Body() data: createUserDto){
+    @Post('reg')
+    async registration(@Body() data: createUserDto, @Res() resp){
         // console.log('data:', data )
-        return this.userService.create(data)
+        const result = await this.userService.create(data)
+        if(result['message'] === "User successfully created"){
+            return resp.status(201).json(result)
+        }else{
+            return resp.status(400).json(result)
+        }
+
+        
     }
 
     @Post('login')
     async loginSystem(@Body() data: LoginUserDto,  @Res() res: any){
-        console.log('data:',data)
+        console.log('data:', data)
         const result = await this.userService.login(data)
         console.log('result:', result )
         if(typeof result === 'string'){
-            return res.cookie('access_token', result).status(201).json('OK')
+            //set cookie
+            res.cookie('access_token', result, { signed:true, maxAge: 1000*60*60*24*7, httpOnly: true, sameSite:true })
+            return res.status(201).json({state:'OK'})
         }else{
             return res.status(403).json(result)
         }

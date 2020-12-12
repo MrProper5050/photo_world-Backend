@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/main.css">
+    
+    <title>Me</title>
+</head>
+<body>
+    <main>
+        <div class="info">
+            <p>ID: {{ ID }}</p>
+            <h1>NAME: {{ name }}</h1>
+        </div>
+        <div class="add_new_image">
+            <form onsubmit="sendFile()" method="POST" enctype="multipart/form-data" action="/profile/upload">
+                <div id="dropZone">
+                    Для загрузки, browse file.
+                    <input type="file" name="file" accept="image/*" id="file-input">
+                    <hr>
+                    <button type="submit">upload</button>
+                </div>
+                
+            </form>
+        </div>
+    </main>
+   
+
+    <script>
+       function sendFile(e){
+            e = e || window.event
+            e.preventDefault()
+            const input = document.querySelector('#file-input')
+            const file = input.files[0];
+
+            let data = new FormData()
+            data.append('file', file)
+
+            console.log(file)
+
+                        
+            fetch('/profile/upload', { 
+                method: 'POST',
+                body: data 
+            }).then(
+                response => response.json() // if the response is a JSON object
+            ).then(
+                success => console.log(success) // Handle the success response object
+            ).catch(
+                error => console.log(error) // Handle the error response object
+            );
+
+       }
+       
+       
+    </script>
+    
+</body>
+</html>

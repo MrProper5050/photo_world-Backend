@@ -22,25 +22,25 @@ export class UserService {
                 id
             }
         })
-        return {name: user.name, images:user.images, registatedIn: user.createdAt}
+        return {id: user.id, name: user.name, images:user.images, registatedIn: user.createdAt}
     }
 
     async create(createUserDto: createUserDto){
 
-        const{name, password} = createUserDto
+        const {name, password} = createUserDto
         const candidate = await User.findOne({ where:{ name } })
 
-        if(candidate) return {error: 'User with this name already exist'}
+        if(candidate) return {message: 'User with this name already exist', state:'NOK'}
         
         try {
             const user = User.build({...createUserDto, images:[''], id:shortid.generate()})
             await user.save()
 
-            return user;
+            return {message:'User successfully created', state:'OK'};
             
         } catch (e) {
 
-            return {error: e.errors[0].message}
+            return {message: e.errors[0].message, state:'NOK'}
         }
 
         
@@ -53,7 +53,7 @@ export class UserService {
         try {
             
             const candidate = await User.findOne({ where:{ name } })
-            if(!candidate) return {error: 'User with this name no exist'}
+            if(!candidate) return {message: 'User with this name no exist', state:'NOK'}
 
             if(candidate.password === password){
 
@@ -67,7 +67,7 @@ export class UserService {
                 return access_token 
 
             }else{
-                return {error: 'Invalid password'}
+                return {message: 'Invalid password', state:'NOK'}
             }
             
     
