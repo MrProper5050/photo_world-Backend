@@ -46,7 +46,7 @@ main{
     border-right: 2px dashed #cccccc;
     padding-top: 30px;
     width: 50%;
-    height: 30%;
+    height: 10%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -55,14 +55,42 @@ main{
     width: 50%;
     height: 20%;
 }
+.myImages{
+    border: 1px dotted #cccccc;
+    width: 60%;
+    min-height: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: center;
 
+}
+.myImages>p{
+    margin:  5px;
+}
+.noImages{
+  height: 50px;
+margin: auto;
+}
+
+form{
+    height:100%;
+    width: 100%;
+}
+input{
+    text-align: center;
+}
 #dropZone {    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     color: #555;
     font-size: 18px;
     text-align: center;    
     
     width: 100%;
-    padding: 50px 0;
+    
+    /* padding: 50px 0; */
     margin: 50px auto;
     
     background: #eee;
@@ -72,18 +100,12 @@ main{
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
-
-#dropZone.hover {
-    background: #ddd;
-    border-color: #aaa;
+hr{
+    width: 100%;
 }
 
-#dropZone.error {
-    background: #faa;
-    border-color: #f00;
-}
-
-#dropZone.drop {
-    background: #afa;
-    border-color: #0f0;
+img{
+    max-width: 200px;
+    border: 1px solid #cccccccc;
+    border-radius: 10px;
 }

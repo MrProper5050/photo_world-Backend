@@ -24,6 +24,24 @@
                 
             </form>
         </div>
+        <div class="myImages">
+            {{#if noImages}}
+                <div class="noImages">
+                    {{noImages}}
+                </div>
+            {{else}}
+
+                {{#each images}}
+                <p>
+                    <img src= "assets/uploads/{{this}}" alt="image" />
+                </p>
+                {{/each}}
+
+            {{/if}}
+          
+            
+            
+        </div>
     </main>
    
 
@@ -46,7 +64,7 @@
             }).then(
                 response => response.json() // if the response is a JSON object
             ).then(
-                success => console.log(success) // Handle the success response object
+                success => window.location.reload() // Handle the success response object
             ).catch(
                 error => console.log(error) // Handle the error response object
             );

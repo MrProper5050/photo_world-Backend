@@ -6,6 +6,8 @@ import { diskStorage } from "multer";
 import { extname } from "path";
 import { storage } from "./storage.config"
 
+import {User} from '../user.model'
+
 @Controller('profile')
 export class ProfileController {
     constructor(private readonly userSevice: UserService){}
@@ -19,7 +21,10 @@ export class ProfileController {
         // console.log('===decoded:',decoded)
         const userId = decoded.data.id
         const user = await this.userSevice.findOne(userId)
-        return {ID: user.id, name: user.name}
+        if(user.images.length == 0){
+            return {ID: user.id, name: user.name, noImages: 'No Images. Upload your first photo!'}
+        }
+        return {ID: user.id, name: user.name, images: user.images}
     }
 
     @Get(':id')
@@ -30,10 +35,33 @@ export class ProfileController {
 
     @Post('/upload')
     @UseInterceptors(FileInterceptor('file', {storage}))
-    uploadImage(@UploadedFile() file){
+    async uploadImage(@UploadedFile() file, @Req() req){
+        const fileName = file.filename
+        try {
+            // update user images array
+            const token = req.signedCookies['access_token'];
+            // console.log('1)token:',token)
+            const decoded = await jwt.verify(token, process.env.JWT_SECRECT)
+            const userId = decoded.data.id
+            // console.log('2)userId:',userId)
+            const user = await this.userSevice.findOne(userId)
+            // console.log('3)user:',user)
+            const images = user.images
+            // console.log('4)user:',images)
+            images.push(fileName)
+            // console.log('5)images.push(fileName):',images)
 
-        
-        console.log('file:',file)
-        return file
+            await User.update({images},{where:{id:userId}})
+            
+            return {message:'upload is successful'}
+            
+
+        } catch (e) {
+
+            console.log(e)
+            return {message:'UPLOAD ERROR'}
+            
+        }
+       
     }
 }

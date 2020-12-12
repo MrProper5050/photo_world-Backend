@@ -35,7 +35,7 @@ export class UserController {
         console.log('result:', result )
         if(typeof result === 'string'){
             //set cookie
-            res.cookie('access_token', result, { signed:true, maxAge: 1000*60*60*24*7, httpOnly: true, sameSite:true })
+            res.cookie('access_token', result, { signed:true, httpOnly: true, sameSite:true })
             return res.status(201).json({state:'OK'})
         }else{
             return res.status(403).json(result)

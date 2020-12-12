@@ -1,7 +1,7 @@
 import { diskStorage } from "multer";
 import { extname } from "path";
 export const storage = diskStorage({
-    destination: "./uploads",
+    destination: "./client/assets/uploads",
     filename: (req, file, callback) => {
       callback(null, generateFilename(file));
     }

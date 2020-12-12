@@ -33,7 +33,7 @@ export class UserService {
         if(candidate) return {message: 'User with this name already exist', state:'NOK'}
         
         try {
-            const user = User.build({...createUserDto, images:[''], id:shortid.generate()})
+            const user = User.build({...createUserDto, images:[], id:shortid.generate()})
             await user.save()
 
             return {message:'User successfully created', state:'OK'};
@@ -60,7 +60,6 @@ export class UserService {
                 const userData = {id: candidate.id,name: candidate.name, images: candidate.images}
 
                 const access_token = jwt.sign({
-                    exp: Math.floor(Date.now() / 1000) + (60 * 60),
                     data: userData
                   }, process.env.JWT_SECRECT);
 
