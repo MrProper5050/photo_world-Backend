@@ -5,10 +5,16 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import {SequelizeModule} from '@nestjs/sequelize'
 import { AuthMiddleware } from './auth.middleware';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { UserController } from './user/user.controller';
 
 @Module({
   imports: [
     UserModule,
+    ServeStaticModule.forRoot({
+      rootPath:join(__dirname,'..','client')
+    }),
     SequelizeModule.forRoot({
       dialect:'postgres',
       host:'localhost',
@@ -26,7 +32,7 @@ import { AuthMiddleware } from './auth.middleware';
 })
 export class AppModule implements NestModule{
   configure(consumer: MiddlewareConsumer){
-    consumer.apply(AuthMiddleware).forRoutes('profile')
+    consumer.apply(AuthMiddleware).forRoutes('profile', 'auth/login', 'auth/reg')
 
   }
 }

@@ -5,20 +5,33 @@ const jwt = require('jsonwebtoken')
 export class AuthMiddleware implements NestMiddleware {
   use(req: any, res: any, next: () => void) {
 
-    if(!req.headers['authorization']) return res.status(401).json({message:'Forbidden'})
+    switch (req.originalUrl) {
+      case "/auth/login":
+        if(req.cookies['access_token']) return res.redirect('/')
+        next();
+        break;
+      case "/auth/reg":
+        if(req.cookies['access_token']) return res.redirect('/')
+        next();
+        break;
+      case "/profile":
+        if(!req.cookies['access_token']) return res.status(401).json({message:'Unauthorized'})
 
-    const token = req.headers['authorization'].split(' ')[1]; //Bearer <token>
+        const token = req.cookies['access_token']
 
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRECT)
-
-      next();
-    } catch (e) {
-      //called if token is invalid
-      // console.log(e)
-      return res.status(402).json({message:'Token error'})
+        try {
+          const decoded = jwt.verify(token, process.env.JWT_SECRECT)
+          next();
+        } catch (e) {
+          // called if token is invalid
+          return res.status(401).json({message:'Unauthorized'})
+        }
+        break;
+    
+      default:
+        next();
+        break;
     }
-
     
   }
 }

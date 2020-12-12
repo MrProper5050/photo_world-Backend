@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <main>
+        <h1>LOGIN</h1>
+        <form onsubmit="iWantToAuth()">
+            <input type="name" name="name" id="name">
+            <input type="password" name="password" id="password">
+            <hr>
+            <button type="submit" value="Sign In">Sign In</button>
+        </form>
+    </main>
+    
+    <script>
+        function iWantToAuth(event) {
+            event = event || window.event
+            event.preventDefault();
+            console.log(event.target)
+
+            const name = event.target['0'].value
+            const password = event.target['1'].value
+
+            fetch('/api/user/login',{
+                method:'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify({name, password})
+            }).then(resp => resp.json()
+                    .then(resp => {console.log(resp); window.location = '/';})
+                    )
+
+            
+        }
+    </script>
+</body>
+</html>

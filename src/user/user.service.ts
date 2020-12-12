@@ -57,14 +57,14 @@ export class UserService {
 
             if(candidate.password === password){
 
-                const userData = {name: candidate.name, images: candidate.images}
+                const userData = {id: candidate.id,name: candidate.name, images: candidate.images}
 
                 const access_token = jwt.sign({
                     exp: Math.floor(Date.now() / 1000) + (60 * 60),
                     data: userData
                   }, process.env.JWT_SECRECT);
 
-                return { access_token }
+                return access_token 
 
             }else{
                 return {error: 'Invalid password'}
