@@ -9,6 +9,12 @@ export class AuthController {
         res.sendFile(join(__dirname,'..','..','..','client','auth','login.html'))
     }
 
+    @Get('/logout')
+    logout(@Res() res){
+        res.clearCookie('access_token')
+        return res.redirect('/')
+    }
+
     @Get('/reg')
     getRegPage(@Res() res){
         res.sendFile(join(__dirname,'..','..','..','client','auth','register.html'))

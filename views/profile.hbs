@@ -5,14 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/assets/main.css">
     
-    <title>Me</title>
+    <title>{{#if isMy}}Me{{else}}{{name}}{{/if}}</title>
 </head>
 <body>
     <main>
+        <div class="goToMainPage">
+            <a href="/">--Back</a>
+        </div>
         <div class="info">
             <p>ID: {{ ID }}</p>
             <h1>NAME: {{ name }}</h1>
         </div>
+        {{#if isMy}}
         <div class="add_new_image">
             <form onsubmit="sendFile()" method="POST" enctype="multipart/form-data" action="/profile/upload">
                 <div id="dropZone">
@@ -24,6 +28,8 @@
                 
             </form>
         </div>
+        {{/if}}
+       
         <div class="myImages">
             {{#if noImages}}
                 <div class="noImages">
@@ -32,9 +38,9 @@
             {{else}}
 
                 {{#each images}}
-                <p>
-                    <img src= "assets/uploads/{{this}}" alt="image" />
-                </p>
+                <div>
+                    <img src="../assets/uploads/{{this}}" alt="image"/>
+                </div>
                 {{/each}}
 
             {{/if}}

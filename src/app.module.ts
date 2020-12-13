@@ -8,6 +8,7 @@ import { AuthMiddleware } from './auth.middleware';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { UserController } from './user/user.controller';
+import { IndexModule } from './index/index.module';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { UserController } from './user/user.controller';
       autoLoadModels: true,
       synchronize:true,
       logging:true
-    })
+    }),
+    IndexModule
   ],
   controllers: [AppController],
   providers: [AppService],

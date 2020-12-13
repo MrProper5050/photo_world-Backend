@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/main.css">
-    <title>Document</title>
+    <title>Photo World</title>
 </head>
 <body>
     <main>
@@ -16,10 +16,29 @@
                 <li>
                     <a href="/auth/login">auth</a>
                 </li>
-
+                {{#if isAuth}}
+                    <li>
+                        <a href="/auth/logout">logout</a>
+                    </li>
+                {{/if}}
+               
             </ul>
         </nav>
-
+        <h2>Our users and their beautiful images</h2>
+        <div class="allUserAndTheirImages">
+            
+            {{#each users}}
+                {{#if this.image}}
+                    <div class="user-card">
+                        <h3><a href="profile/{{this.id}}">{{this.name}}</a></h3>
+                        <div class="lastImage">
+                            <img src="assets/uploads/{{this.image}}" alt="last user image"/>
+                        </div>
+                    </div>
+                {{/if}}
+            {{/each}}
+            
+        </div>
     </main>
 </body>
 </html>

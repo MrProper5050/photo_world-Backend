@@ -1,5 +1,5 @@
 
-import { Column, Table, Model, PrimaryKey, CreatedAt, UpdatedAt, DataType, Default, AllowNull} from 'sequelize-typescript'
+import { Column, Table, Model, PrimaryKey, CreatedAt, UpdatedAt, DataType, AllowNull} from 'sequelize-typescript'
 
 
 

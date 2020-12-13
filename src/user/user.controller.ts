@@ -11,7 +11,7 @@ export class UserController {
 
     @Get()
     getAll(@Req() req: any){
-        console.log(req.cookies)
+        // console.log(req.cookies)
         return this.userService.findAll()
     }
 
