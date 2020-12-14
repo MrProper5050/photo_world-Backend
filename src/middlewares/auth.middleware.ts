@@ -1,8 +1,12 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
+import { AppService } from '../app.service';
 const jwt = require('jsonwebtoken')
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
+
+  // constructor(private readonly appService: AppService){ }
+
   use(req: any, res: any, next: () => void) {
 
     switch (req.originalUrl) {

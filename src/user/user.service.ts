@@ -22,7 +22,7 @@ export class UserService {
                 id
             }
         })
-        return {id: user.id, name: user.name, images:user.images, registatedIn: user.createdAt}
+        return {id: user.id, name: user.name, images:user.images, registatedIn: user.createdAt, role: user.role}
     }
 
     async create(createUserDto: createUserDto){
@@ -33,7 +33,7 @@ export class UserService {
         if(candidate) return {message: 'User with this name already exist', state:'NOK'}
         
         try {
-            const user = User.build({...createUserDto, images:[], id:shortid.generate()})
+            const user = User.build({...createUserDto, images:[], id:shortid.generate(), role:'common'})
             await user.save()
 
             return {message:'User successfully created', state:'OK'};

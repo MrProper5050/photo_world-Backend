@@ -21,6 +21,9 @@ export class User extends Model<User>{
     @Column(DataType.ARRAY(DataType.STRING))
     images
 
+    @Column
+    role: string;
+
     @CreatedAt
     @Column
     createdAt: Date
