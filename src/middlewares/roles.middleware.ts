@@ -1,5 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken'
+import { join } from 'path';
 import { UserService } from '../user/user.service';
 
 
@@ -20,7 +21,7 @@ export class RolesMiddleware implements NestMiddleware {
       const user = await this.userService.findOne(userId)
       // console.log('user',user)
       if( user.role !== 'admin') {
-        return res.redirect('/')
+        return res.render('404')
       }
 
 
@@ -28,9 +29,8 @@ export class RolesMiddleware implements NestMiddleware {
 
       
     } catch (error) {
-
-      console.log(error)
-      
+      //call if jwt is invalid or server couldn't find a user
+      return res.render('404')
     }
     
 

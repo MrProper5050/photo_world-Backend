@@ -25,7 +25,7 @@ export class ProfileController {
         const user = await this.userSevice.findOne(userId)
         // console.log('===user:',user)
         if(user.images.length == 0){
-            return {ID: user.id, name: user.name, noImages: 'No Images. Upload your first photo!'}
+            return {ID: user.id, name: user.name, noImages: 'No Images. Upload your first photo!', isMy:true}
         }
         console.log('user:',user)
         return {ID: user.id, name: user.name, images: user.images, isMy:true}

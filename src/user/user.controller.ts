@@ -9,7 +9,7 @@ export class UserController {
 
     constructor(private readonly userService: UserService){}
 
-    @Get()
+    @Post()
     getAll(@Req() req: any){
         // console.log(req.cookies)
         return this.userService.findAll()
