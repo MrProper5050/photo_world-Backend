@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Op } from 'sequelize';
+
 import { createUserDto } from './dto/createUser.dto';
+import { FindByDto } from './dto/findBy.dto';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { User } from './user.model';
 const shortid = require('shortid')
@@ -25,15 +28,39 @@ export class UserService {
         return {id: user.id, name: user.name, images:user.images, registatedIn: user.createdAt, role: user.role}
     }
 
+    async findBy(findByDto: FindByDto) {
+        console.log('1)findByDTO: ', findByDto)
+        try {
+            
+            const users = await this.userModel.findAll({ where:{
+                [findByDto.by]:{
+                    [Op.iLike]: '%'+[findByDto.value]+'%'
+                }
+            }})
+
+            if(!users || users.length === 0){
+                throw new Error("Coud not find user");
+                
+            }else{
+                return users;
+            }
+            
+        } catch (msg) {
+            
+            return {message: "Coud not find user"}
+        }
+        
+    }
+
     async create(createUserDto: createUserDto){
 
-        const {name, password} = createUserDto
-        const candidate = await User.findOne({ where:{ name } })
+        const {name, password, role} = createUserDto
 
+        const candidate = await User.findOne({ where:{ name } })
         if(candidate) return {message: 'User with this name already exist', state:'NOK'}
         
         try {
-            const user = User.build({...createUserDto, images:[], id:shortid.generate(), role:'common'})
+            const user = User.build({...createUserDto, images:[], id:shortid.generate(),})
             await user.save()
 
             return {message:'User successfully created', state:'OK'};
@@ -80,14 +107,17 @@ export class UserService {
     async remove(id: string){
         try {
             const user = await this.userModel.findOne({
-                where:{
-                    id
-                }
+                where:{ id }
             })
-            await user.destroy()
-            return {ok:'ok'}
+            if(!user){
+                throw new Error("User undefined");
+            }else{
+                await user.destroy()
+                return {message:'Deleted'}
+            }
+           
         } catch (e) {
-            return {error:'User undefined'}
+            return {message:'User undefined'}
         }
         
     }

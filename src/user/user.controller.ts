@@ -3,6 +3,7 @@ import { Injector } from '@nestjs/core/injector/injector';
 import { UserService } from './user.service';
 import { createUserDto } from './dto/createUser.dto'
 import { LoginUserDto } from './dto/loginUser.dto';
+import { FindByDto } from './dto/findBy.dto';
 
 @Controller('api/user')
 export class UserController {
@@ -10,9 +11,15 @@ export class UserController {
     constructor(private readonly userService: UserService){}
 
     @Post()
-    getAll(@Req() req: any){
+    async getAll(@Req() req: any){
         // console.log(req.cookies)
-        return this.userService.findAll()
+        return await this.userService.findAll()
+    }
+
+    @Post('getBy')
+    async getBy(@Body() findByDto: FindByDto){
+        console.log(findByDto)
+        return await this.userService.findBy(findByDto)
     }
 
     @Post('reg')
@@ -43,8 +50,14 @@ export class UserController {
         
     }
 
-    @Delete('/remove/:id')
-    removeUser(@Param('id')id: string){
+    @Delete('remove')
+    removeUser(@Body() data){
+        // console.log('id:',id)
+        return this.userService.remove(data.id)
+    }
+
+    @Delete('remove/:id')
+    removeUserByIdParamUrl(@Param('id')id: string){
         // console.log('id:',id)
         return this.userService.remove(id)
     }

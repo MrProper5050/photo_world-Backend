@@ -67,10 +67,14 @@ main{
     width: 100%;
     font-size: 1.2em;
 }
-
+#content{
+    display: flex;
+    flex-wrap: wrap;
+}
 .user{
     border: 1px dashed #cccccc;
     padding: 10px;
+    margin: 3px;
 }
 .user>section{
     display: flex;
@@ -85,7 +89,47 @@ main{
     display: flex;
     align-items: center;
 }
+
 section.finally>a{
     width: 100%;
-    text-align: center
+    text-align: center;
+    border-top: 1px solid #cccccc;
+    padding: 5px 0 0 0;
+}
+
+.findBy__input{
+    height: 40px;
+    width: 90%;
+    display: flex;
+    margin: 5px 0;
+    align-items: center;
+}
+.findBy__input>input{
+    height: calc(100% - 2px);
+    width: 100%;
+    text-align: center;
+    font-size: 23px;
+}
+.findBy__input>button{
+    width: 60px;
+    height: 100%;
+}
+
+.create__inputs, .delete__inputs{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 500px;
+    border: 1px solid black;
+    padding: 10px;
+}
+.create__inputs>input,
+.create__inputs>select,
+.create__inputs>button,
+.delete__inputs>input,
+.delete__inputs>button{
+    height: 40px;
+    font-size: 24px;
+    text-align: center;
+    margin-top: 10px;
 }
