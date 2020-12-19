@@ -2692,7 +2692,7 @@
         "affectsGlobalScope": false
       },
       "../src/main.ts": {
-        "version": "ae3100faeb1448f7d7ea19579b256f35f0d7b694f7e45917fcbf4120e084efbc",
+        "version": "df8035a80b7eaae4aff6dccf1625b5dbcea18f2baa30ce51a7a6dfa7e082b126",
         "signature": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881",
         "affectsGlobalScope": false
       },
@@ -8112,7 +8112,6 @@
       "../src/index/index.controller.ts",
       "../src/index/index.module.ts",
       "../src/index/index.service.ts",
-      "../src/main.ts",
       "../src/middlewares/auth.middleware.ts",
       "../src/middlewares/roles.middleware.ts",
       "../src/user/auth/auth.controller.ts",

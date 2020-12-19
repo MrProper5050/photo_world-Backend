@@ -12,8 +12,8 @@ async function bootstrap() {
         app.use(cookieParser(config_1.default.cookie_s));
         app.setBaseViewsDir(path_1.join(__dirname, '..', 'views'));
         app.setViewEngine('hbs');
-        await app.listen(3000);
-        common_1.Logger.log('Server started on 3000 port', 'Bootstrap');
+        await app.listen(3333);
+        common_1.Logger.log('Server started on 3333 port', 'Bootstrap');
     }
     catch (error) {
         common_1.Logger.log(error, 'Bootstrap');
