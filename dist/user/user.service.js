@@ -161,7 +161,11 @@ let UserService = class UserService {
             else {
                 await img.destroy();
             }
-            fs.unlinkSync(path_1.join(__dirname, '..', '..', 'client', 'assets', 'uploads', imageName));
+            fs.unlink(path_1.join(__dirname, '..', '..', 'client', 'assets', 'uploads', imageName), (err) => {
+                if (err) {
+                    return;
+                }
+            });
             return { message: 'OK' };
         }
         catch (error) {

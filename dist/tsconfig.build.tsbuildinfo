@@ -2027,7 +2027,7 @@
         "affectsGlobalScope": false
       },
       "../src/user/user.service.ts": {
-        "version": "6a666aeb0e49af32492a26b88abedc84b13d573f38fa91c8f37978853b8a5ef0",
+        "version": "721aaed21fb845e7801808e992ba5d227368a7d80fa4b5784c2a172f9004c3a5",
         "signature": "77356735ff029e1b008e084cf26331b1e84663b45e780227f2956cb44293afde",
         "affectsGlobalScope": false
       },

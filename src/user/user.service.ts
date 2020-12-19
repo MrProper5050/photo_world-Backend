@@ -186,7 +186,9 @@ export class UserService {
             }
 
             //delete from system
-            fs.unlinkSync(join(__dirname,'..','..','client','assets','uploads',imageName))
+            fs.unlink(join(__dirname,'..','..','client','assets','uploads',imageName), (err)=>{
+                if( err ) {return}
+            })
 
             return {message: 'OK'}
             
