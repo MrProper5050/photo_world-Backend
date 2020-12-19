@@ -59,7 +59,7 @@ let ProfileController = class ProfileController {
             const decoded = await jwt.verify(token, config_1.default.jwt_s);
             const userId = decoded.data.id;
             const user = await this.userSevice.findOne(userId);
-            const images = user.images;
+            let images = user.images;
             images.unshift(fileName);
             await user_model_1.User.update({ images }, { where: { id: userId } });
             await this.userSevice.addImage(fileName);
