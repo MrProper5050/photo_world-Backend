@@ -171,9 +171,7 @@ export class UserService {
                     }
                 }
             })
-            if(!candidate){
-                throw new Error("User undefined");
-            }else{
+            if(candidate){
                 let index = candidate.images.indexOf(imageName)
                 candidate.images.splice(index,1)
                 await User.update({images:candidate.images},{where:{id:candidate.id}})
