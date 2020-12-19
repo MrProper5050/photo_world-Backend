@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res } from '@nestjs/common';
+import { Controller, Get,  Res } from '@nestjs/common';
 import { join } from 'path';
 
 @Controller('auth')

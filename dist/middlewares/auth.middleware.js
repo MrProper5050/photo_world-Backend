@@ -9,11 +9,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthMiddleware = void 0;
 const common_1 = require("@nestjs/common");
 const jwt = require('jsonwebtoken');
+const config_1 = require("../config");
 let AuthMiddleware = class AuthMiddleware {
     use(req, res, next) {
         switch (req.originalUrl) {
             case "/auth/login":
-                console.log('req.cookies:', req.signedCookies);
                 if (req.signedCookies['access_token'])
                     return res.redirect('/');
                 next();
@@ -28,7 +28,7 @@ let AuthMiddleware = class AuthMiddleware {
                     return res.redirect('/');
                 const token = req.signedCookies['access_token'];
                 try {
-                    const decoded = jwt.verify(token, process.env.JWT_SECRECT);
+                    const decoded = jwt.verify(token, config_1.default.jwt_s);
                     next();
                 }
                 catch (e) {

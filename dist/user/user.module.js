@@ -15,14 +15,15 @@ const user_controller_1 = require("./user.controller");
 const profile_controller_1 = require("./profile/profile.controller");
 const auth_controller_1 = require("./auth/auth.controller");
 const roles_middleware_1 = require("../middlewares/roles.middleware");
+const images_model_1 = require("./images.model");
 let UserModule = class UserModule {
     configure(consumer) {
-        consumer.apply(roles_middleware_1.RolesMiddleware).forRoutes('admin');
+        consumer.apply(roles_middleware_1.RolesMiddleware).forRoutes('admin', 'api/user/remove');
     }
 };
 UserModule = __decorate([
     common_1.Module({
-        imports: [sequelize_1.SequelizeModule.forFeature([user_model_1.User])],
+        imports: [sequelize_1.SequelizeModule.forFeature([user_model_1.User, images_model_1.Image])],
         providers: [user_service_1.UserService],
         controllers: [user_controller_1.UserController, profile_controller_1.ProfileController, auth_controller_1.AuthController],
         exports: [user_service_1.UserService]

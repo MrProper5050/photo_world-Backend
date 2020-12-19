@@ -13,6 +13,7 @@
             <input type="password" name="password" id="password" placeholder="password">
             <hr>
             <button type="submit" value="Sign In">Sign In</button>
+            <p id="server_message"></p>
         </form>
         <a href="/auth/reg">registration</a>
     </main>
@@ -32,14 +33,19 @@
                     'Content-Type': 'application/json;charset=utf-8'
                 },
                 body: JSON.stringify({name, password})
-            }).then(resp => resp.json()
-                    .then(resp => {
-                        console.log(resp)
-                        if(resp['state'] === 'OK'){
-                            window.location = '/'
-                        }
-                    })
-                    )
+            })
+            .then(resp => resp.json())
+            .then(resp => {
+                
+                if(resp['state'] === 'OK'){
+                    window.location = '/'
+                }
+                else{
+                    document.querySelector('#server_message').innerHTML = resp.message
+                }
+            })
+            
+                    
 
             
         }

@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { from } from 'rxjs';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -7,11 +6,10 @@ import {SequelizeModule} from '@nestjs/sequelize'
 import { AuthMiddleware } from './middlewares/auth.middleware';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { UserController } from './user/user.controller';
 import { IndexModule } from './index/index.module';
 import { AdminModule } from './admin/admin.module';
-import { RolesMiddleware } from './middlewares/roles.middleware';
-import { UserService } from './user/user.service';
+
+
 
 @Module({
   imports: [
@@ -27,8 +25,7 @@ import { UserService } from './user/user.service';
       password:'1234',
       database:'photo_world',
       autoLoadModels: true,
-      synchronize:true,
-      logging:true
+      logging:false
     }),
     IndexModule,
     AdminModule

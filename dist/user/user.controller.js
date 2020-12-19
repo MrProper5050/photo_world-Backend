@@ -23,7 +23,6 @@ let UserController = class UserController {
         return await this.userService.findAll();
     }
     async getBy(findByDto) {
-        console.log(findByDto);
         return await this.userService.findBy(findByDto);
     }
     async registration(data, resp) {
@@ -36,9 +35,7 @@ let UserController = class UserController {
         }
     }
     async loginSystem(data, res) {
-        console.log('data:', data);
         const result = await this.userService.login(data);
-        console.log('result:', result);
         if (typeof result === 'string') {
             res.cookie('access_token', result, { signed: true, httpOnly: true, sameSite: true });
             return res.status(201).json({ state: 'OK' });

@@ -71,15 +71,20 @@ main{
     display: flex;
     flex-wrap: wrap;
 }
-.user{
+.user,.image{
     border: 1px dashed #cccccc;
     padding: 10px;
     margin: 3px;
+    width: 300px;
 }
-.user>section{
+.user>section,.image>section{
     display: flex;
     width: 100%;
+    align-items: center;
     /* justify-content: space-between; */
+}
+.image>section>img{
+    width: 100%;
 }
 .user>section>h3{
     width: 50%;

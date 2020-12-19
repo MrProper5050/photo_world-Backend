@@ -37,8 +37,7 @@ AppModule = __decorate([
                 password: '1234',
                 database: 'photo_world',
                 autoLoadModels: true,
-                synchronize: true,
-                logging: true
+                logging: false
             }),
             index_module_1.IndexModule,
             admin_module_1.AdminModule

@@ -1,5 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Req, Res } from '@nestjs/common';
-import { Injector } from '@nestjs/core/injector/injector';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Req, Res } from '@nestjs/common';
 import { UserService } from './user.service';
 import { createUserDto } from './dto/createUser.dto'
 import { LoginUserDto } from './dto/loginUser.dto';
@@ -18,7 +17,6 @@ export class UserController {
 
     @Post('getBy')
     async getBy(@Body() findByDto: FindByDto){
-        console.log(findByDto)
         return await this.userService.findBy(findByDto)
     }
 
@@ -37,12 +35,12 @@ export class UserController {
 
     @Post('login')
     async loginSystem(@Body() data: LoginUserDto,  @Res() res: any){
-        console.log('data:', data)
+        // this.userService.deleteImage('1607836877677..jpg')
         const result = await this.userService.login(data)
-        console.log('result:', result )
         if(typeof result === 'string'){
             //set cookie
             res.cookie('access_token', result, { signed:true, httpOnly: true, sameSite:true })
+           
             return res.status(201).json({state:'OK'})
         }else{
             return res.status(403).json(result)
@@ -61,4 +59,7 @@ export class UserController {
         // console.log('id:',id)
         return this.userService.remove(id)
     }
+
+
+    
 }

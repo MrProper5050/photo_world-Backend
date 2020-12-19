@@ -11,10 +11,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminService = void 0;
 const common_1 = require("@nestjs/common");
+const findBy_dto_1 = require("../user/dto/findBy.dto");
 const user_service_1 = require("../user/user.service");
 let AdminService = class AdminService {
     constructor(userService) {
         this.userService = userService;
+    }
+    async findAll() {
+        return this.userService.findAll();
+    }
+    async findBy(findByDto) {
+        return this.userService.findBy(findByDto);
+    }
+    async remove(id) {
+        return this.userService.remove(id);
+    }
+    async getAllImages() {
+        return await this.userService.getAllImages();
+    }
+    async removeImage(name) {
+        return this.userService.removeImage(name);
     }
 };
 AdminService = __decorate([

@@ -1,6 +1,7 @@
 import { Controller, Get, Inject, Render, Req } from '@nestjs/common';
 import { IndexService } from './index.service';
 import * as jwt from 'jsonwebtoken'
+import config from '../config'
 
 @Controller()
 export class IndexController {
@@ -12,8 +13,7 @@ export class IndexController {
     async getIndexPageAndUsers(@Req()req: any){
         try {
             const token = req.signedCookies['access_token'];
-            const decoded = jwt.verify(token, process.env.JWT_SECRECT)
-            
+            const decoded = jwt.verify(token, config.jwt_s)
             return {users: await this.indexService.getAllUserAndTheirLastImage(), isAuth:true}
         } catch (e) {
             return {users: await this.indexService.getAllUserAndTheirLastImage()}

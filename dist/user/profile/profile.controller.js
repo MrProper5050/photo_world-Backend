@@ -19,24 +19,24 @@ const jwt = require("jsonwebtoken");
 const platform_express_1 = require("@nestjs/platform-express");
 const storage_config_1 = require("./storage.config");
 const user_model_1 = require("../user.model");
+const config_1 = require("../../config");
 let ProfileController = class ProfileController {
     constructor(userSevice) {
         this.userSevice = userSevice;
     }
     async getProfile(req) {
         const token = req.signedCookies['access_token'];
-        const decoded = jwt.verify(token, process.env.JWT_SECRECT);
+        const decoded = jwt.verify(token, config_1.default.jwt_s);
         const userId = decoded.data.id;
         const user = await this.userSevice.findOne(userId);
         if (user.images.length == 0) {
             return { ID: user.id, name: user.name, noImages: 'No Images. Upload your first photo!', isMy: true };
         }
-        console.log('user:', user);
         return { ID: user.id, name: user.name, images: user.images, isMy: true };
     }
     async getProfileById(id, req) {
         const token = req.signedCookies['access_token'];
-        const decoded = jwt.verify(token, process.env.JWT_SECRECT);
+        const decoded = jwt.verify(token, config_1.default.jwt_s);
         const userId = decoded.data.id;
         const user = await this.userSevice.findOne(id);
         if (userId === id) {
@@ -51,24 +51,20 @@ let ProfileController = class ProfileController {
             }
             return { ID: user.id, name: user.name, images: user.images };
         }
-        console.log('user:', user);
     }
     async uploadImage(file, req) {
         const fileName = file.filename;
-        console.log('fileName:', fileName);
         try {
             const token = req.signedCookies['access_token'];
-            console.log('1)token:', token);
-            const decoded = await jwt.verify(token, process.env.JWT_SECRECT);
+            const decoded = await jwt.verify(token, config_1.default.jwt_s);
             const userId = decoded.data.id;
-            console.log('2)userId:', userId);
             const user = await this.userSevice.findOne(userId);
-            console.log('3)user:', user);
             const images = user.images;
-            console.log('4)images:', images);
             images.unshift(fileName);
-            console.log('5)images.push(fileName):', images);
             await user_model_1.User.update({ images }, { where: { id: userId } });
+            await this.userSevice.addImage(fileName);
+            const date = new Date();
+            console.log(`User "${user.name}" upload image`, `[${date.getDay()}/${date.getMonth()}/${date.getFullYear()}]`, `${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`);
             return { message: 'upload is successful' };
         }
         catch (e) {

@@ -13,6 +13,7 @@ exports.RolesMiddleware = void 0;
 const common_1 = require("@nestjs/common");
 const jwt = require("jsonwebtoken");
 const user_service_1 = require("../user/user.service");
+const config_1 = require("../config");
 let RolesMiddleware = class RolesMiddleware {
     constructor(userService) {
         this.userService = userService;
@@ -20,7 +21,7 @@ let RolesMiddleware = class RolesMiddleware {
     async use(req, res, next) {
         try {
             const token = req.signedCookies['access_token'];
-            const decoded = await jwt.verify(token, process.env.JWT_SECRECT);
+            const decoded = await jwt.verify(token, config_1.default.jwt_s);
             const userId = decoded.data.id;
             const user = await this.userService.findOne(userId);
             if (user.role !== 'admin') {

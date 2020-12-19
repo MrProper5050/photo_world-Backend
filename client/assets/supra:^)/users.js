@@ -10,7 +10,7 @@ function getAllUsers() {
     let usersList = []
   
 
-    fetch('/api/user', {
+    fetch('/admin/users', {
 
         method:'POST',
         headers:{'Content-Type':'application/json'},
@@ -110,7 +110,7 @@ findBy_Btn.addEventListener('click',(e)=>{
         console.log(requestObject)
 
         // send value to server
-        fetch('/api/user/getBy', {
+        fetch('/admin/users/getBy', {
 
             method:'POST',
             headers:{'Content-Type':'application/json'},
@@ -206,7 +206,7 @@ delete_Btn.addEventListener('click',(e)=>{
         const id = document.querySelector('#id').value.trim()
         const requestObject = {id}
 
-        fetch('/api/user/remove', {
+        fetch('/admin/users/remove', {
 
             method:'Delete',
             headers:{'Content-Type':'application/json'},

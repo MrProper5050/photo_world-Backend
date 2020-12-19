@@ -1,35 +1,47 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
-
 import { createUserDto } from './dto/createUser.dto';
 import { FindByDto } from './dto/findBy.dto';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { User } from './user.model';
+
 const shortid = require('shortid')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
+import config from '../config'
+const fs = require('fs')
+import { join } from 'path';
+import { Image } from './images.model';
+
 
 @Injectable()
 export class UserService {
 
-    constructor(@InjectModel(User) private userModel: typeof User){}
+    constructor(@InjectModel(User) private userModel: typeof User, @InjectModel(Image) private imageModel: typeof Image){}
 
     async findAll(): Promise<User[]>{
         return this.userModel.findAll();
     }
 
     async findOne(id:string){
-        const user = await this.userModel.findOne({
-            where:{
-                id
-            }
-        })
-        return {id: user.id, name: user.name, images:user.images, registatedIn: user.createdAt, role: user.role}
+        try {
+            const user = await this.userModel.findOne({
+                where: {
+                    id
+                }
+            });
+            if(!user) throw new Error('Invalid user')
+            
+            return { id: user.id, name: user.name, images: user.images, registatedIn: user.createdAt, role: user.role };
+            
+        } catch (error) {
+            return error
+        }
+        
     }
 
     async findBy(findByDto: FindByDto) {
-        console.log('1)findByDTO: ', findByDto)
         try {
             
             const users = await this.userModel.findAll({ where:{
@@ -54,14 +66,22 @@ export class UserService {
 
     async create(createUserDto: createUserDto){
 
+        const validated = this.password_login_validate(createUserDto)
+        if(validated !== 'OK'){
+            return validated
+        }
         const {name, password, role} = createUserDto
 
         const candidate = await User.findOne({ where:{ name } })
         if(candidate) return {message: 'User with this name already exist', state:'NOK'}
         
         try {
-            const user = User.build({...createUserDto, images:[], id:shortid.generate(),})
+            let role = createUserDto.role || 'common'
+            const user = User.build({...createUserDto, images:[], id:shortid.generate(), role})
             await user.save()
+
+            const date = new Date()
+            console.log(`User "${user.name}" registrated`,`[${date.getDay()}/${date.getMonth()}/${date.getFullYear()}]`,`${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`)
 
             return {message:'User successfully created', state:'OK'};
             
@@ -72,9 +92,18 @@ export class UserService {
 
         
     }
-    
+    password_login_validate(userObj){
+        if(userObj.password.length < 6){
+            return {message: 'Min password length 6 symbols', state:'NOK'}
+        }
+        return 'OK'
+    }
     async login(loginUserDto: LoginUserDto){
-
+        const validated = this.password_login_validate(loginUserDto)
+        if(validated !== 'OK'){
+            return validated
+        }
+        
         const{name, password} = loginUserDto
        
         try {
@@ -88,8 +117,11 @@ export class UserService {
 
                 const access_token = jwt.sign({
                     data: userData
-                  }, process.env.JWT_SECRECT);
-
+                }, config.jwt_s);
+                //log
+                const date = new Date() 
+                console.log(`User "${userData.name}" login`,`[${date.getDay()}/${date.getMonth()}/${date.getFullYear()}]`,`${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`)
+                
                 return access_token 
 
             }else{
@@ -122,4 +154,61 @@ export class UserService {
         
     }
 
+    async getAllImages(): Promise<Image[]>{
+        
+        return await this.imageModel.findAll()
+        
+    }
+
+    async removeImage(imageName){
+        console.log(imageName)
+        try {
+            //update user.images
+            const candidate = await this.userModel.findOne({
+                where:{
+                    images: {
+                        [Op.contains]: [imageName]
+                    }
+                }
+            })
+            if(!candidate){
+                throw new Error("User undefined");
+            }else{
+                let index = candidate.images.indexOf(imageName)
+                candidate.images.splice(index,1)
+                await User.update({images:candidate.images},{where:{id:candidate.id}})
+            }
+            
+            //update all images
+            let img = await Image.findOne({where:{name:imageName}})
+            if(!img){
+                throw new Error("Image undefined");
+            }else{
+                await img.destroy()
+            }
+
+            //delete from system
+            fs.unlinkSync(join(__dirname,'..','..','client','assets','uploads',imageName))
+
+            return {message: 'OK'}
+            
+        } catch (error) {
+            console.log(error)
+            return {message:'Failure to delete image'}
+        }
+        
+        
+      
+ 
+    }
+
+    async addImage(imageName: string){
+        try {
+            const image = Image.build({name: imageName})
+            await image.save()
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    
 }
