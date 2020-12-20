@@ -20,42 +20,69 @@ const platform_express_1 = require("@nestjs/platform-express");
 const storage_config_1 = require("./storage.config");
 const user_model_1 = require("../user.model");
 const config_1 = require("../../config");
+const logger4js = require("log4js");
+const logger = logger4js.getLogger();
 let ProfileController = class ProfileController {
     constructor(userSevice) {
         this.userSevice = userSevice;
     }
-    async getProfile(req) {
+    async getProfile(req, res) {
         const token = req.signedCookies['access_token'];
         const decoded = jwt.verify(token, config_1.default.jwt_s);
         const userId = decoded.data.id;
         const user = await this.userSevice.findOne(userId);
+        if (!user)
+            return res.status(404).render('404');
         if (user.images.length == 0) {
-            return { ID: user.id, name: user.name, noImages: 'No Images. Upload your first photo!', isMy: true };
+            return res.render('profile', { ID: user.id, name: user.name, noImages: 'No Images. Upload your first photo!', isMy: true });
         }
-        return { ID: user.id, name: user.name, images: user.images, isMy: true };
+        return res.render('profile', { ID: user.id, name: user.name, images: user.images, isMy: true });
     }
-    async getProfileById(id, req) {
-        const token = req.signedCookies['access_token'];
-        const decoded = jwt.verify(token, config_1.default.jwt_s);
-        const userId = decoded.data.id;
-        const user = await this.userSevice.findOne(id);
-        if (userId === id) {
-            if (user.images.length == 0) {
-                return { ID: user.id, name: user.name, noImages: 'No Images. Upload your first photo!', isMy: true };
-            }
-            return { ID: user.id, name: user.name, images: user.images, isMy: true };
-        }
-        else {
-            if (user.images.length == 0) {
-                return { ID: user.id, name: user.name, noImages: 'No Images. Upload your first photo!' };
-            }
-            return { ID: user.id, name: user.name, images: user.images };
-        }
-    }
-    async uploadImage(file, req) {
-        const fileName = file.filename;
+    async getProfileById(id, req, res) {
         try {
             const token = req.signedCookies['access_token'];
+            const decoded = jwt.verify(token, config_1.default.jwt_s);
+            const userId = decoded.data.id;
+            const user = await this.userSevice.findOne(id);
+            if (!user) {
+                return res.status(404).render('404');
+            }
+            if (userId === id) {
+                if (user.images.length == 0) {
+                    return res.render('profile', { ID: user.id, name: user.name, noImages: 'No Images. Upload your first photo!', isMy: true });
+                }
+                return res.render('profile', { ID: user.id, name: user.name, images: user.images, isMy: true });
+            }
+            else {
+                if (user.images.length == 0) {
+                    return res.render('profile', { ID: user.id, name: user.name, noImages: 'No Images. Upload your first photo!' });
+                }
+                return res.render('profile', { ID: user.id, name: user.name, images: user.images });
+            }
+        }
+        catch (e) {
+            return res.status(333).redirect('/');
+        }
+    }
+    async uploadImage(file, req, res) {
+        const fileName = file.filename;
+        let file_ex = fileName.split('.')[fileName.split('.').length - 1].toLowerCase();
+        if (file.size > 10000000) {
+            return res.status(304).json({ message: 'file too large(max size 10MB)' });
+        }
+        if (!(file_ex === 'png' ||
+            file_ex === 'jpg' ||
+            file_ex === 'jpeg' ||
+            file_ex === 'tiff' ||
+            file_ex === 'gif' ||
+            file_ex === 'webp' ||
+            file_ex === 'svg')) {
+            return res.status(304).json({ message: 'file extension is invalid' });
+        }
+        try {
+            const token = req.signedCookies['access_token'];
+            if (!token)
+                return res.status(403).json('FORBIDDEN');
             const decoded = await jwt.verify(token, config_1.default.jwt_s);
             const userId = decoded.data.id;
             const user = await this.userSevice.findOne(userId);
@@ -63,40 +90,47 @@ let ProfileController = class ProfileController {
             images.unshift(fileName);
             await user_model_1.User.update({ images }, { where: { id: userId } });
             await this.userSevice.addImage(fileName);
-            const date = new Date();
-            console.log(`User "${user.name}" upload image`, `[${date.getDay()}/${date.getMonth()}/${date.getFullYear()}]`, `${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`);
-            return { message: 'upload is successful' };
+            logger.debug(`User "${user.name}" upload image`);
+            return res.status(202).json({ message: 'upload is successful' });
         }
         catch (e) {
             console.log(e);
-            return { message: 'UPLOAD ERROR' };
+            return res.status(402).json({ message: 'UPLOAD ERROR' });
         }
+    }
+    async deleteImage(data) {
+        return this.userSevice.removeImage(data.imageName);
     }
 };
 __decorate([
     common_1.Get(),
-    common_1.Render('profile'),
-    __param(0, common_1.Req()),
+    __param(0, common_1.Req()), __param(1, common_1.Res()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "getProfile", null);
 __decorate([
     common_1.Get(':id'),
-    common_1.Render('profile'),
-    __param(0, common_1.Param('id')), __param(1, common_1.Req()),
+    __param(0, common_1.Param('id')), __param(1, common_1.Req()), __param(2, common_1.Res()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "getProfileById", null);
 __decorate([
     common_1.Post('/upload'),
     common_1.UseInterceptors(platform_express_1.FileInterceptor('file', { storage: storage_config_1.storage })),
-    __param(0, common_1.UploadedFile()), __param(1, common_1.Req()),
+    __param(0, common_1.UploadedFile()), __param(1, common_1.Req()), __param(2, common_1.Res()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object, Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "uploadImage", null);
+__decorate([
+    common_1.Post('/deleteImage'),
+    __param(0, common_1.Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "deleteImage", null);
 ProfileController = __decorate([
     common_1.Controller('profile'),
     __metadata("design:paramtypes", [user_service_1.UserService])

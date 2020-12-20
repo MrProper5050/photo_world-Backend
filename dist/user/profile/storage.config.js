@@ -4,7 +4,7 @@ exports.storage = void 0;
 const multer_1 = require("multer");
 const path_1 = require("path");
 exports.storage = multer_1.diskStorage({
-    destination: "../client/assets/uploads",
+    destination: "./client/assets/uploads",
     filename: (req, file, callback) => {
         callback(null, generateFilename(file));
     }

@@ -26,7 +26,7 @@ import { AdminModule } from './admin/admin.module';
       database:'photo_world',
       autoLoadModels: true,
       synchronize:true,
-      logging:true
+      logging:false
     }),
     IndexModule,
     AdminModule

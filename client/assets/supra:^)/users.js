@@ -161,7 +161,7 @@ create_Btn.addEventListener('click',(e)=>{
         const role = document.querySelector('#role').value
         const requestObject = {name, password, role}
         console.log(requestObject)
-        fetch('/api/user/reg', {
+        fetch('/admin/users/reg', {
 
             method:'POST',
             headers:{'Content-Type':'application/json'},

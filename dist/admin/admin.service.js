@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminService = void 0;
 const common_1 = require("@nestjs/common");
+const createUser_dto_1 = require("../user/dto/createUser.dto");
 const findBy_dto_1 = require("../user/dto/findBy.dto");
 const user_service_1 = require("../user/user.service");
 let AdminService = class AdminService {
@@ -22,6 +23,9 @@ let AdminService = class AdminService {
     }
     async findBy(findByDto) {
         return this.userService.findBy(findByDto);
+    }
+    async create(createUserDto) {
+        return this.userService.create(createUserDto);
     }
     async remove(id) {
         return this.userService.remove(id);

@@ -1,46 +1,12 @@
 import { UserService } from '../user.service';
+import { DeleteImageDto } from '../dto/deleteImage.dto';
 export declare class ProfileController {
     private readonly userSevice;
     constructor(userSevice: UserService);
-    getProfile(req: any): Promise<{
-        ID: any;
-        name: any;
-        noImages: string;
-        isMy: boolean;
-        images?: undefined;
-    } | {
-        ID: any;
-        name: any;
-        images: any;
-        isMy: boolean;
-        noImages?: undefined;
-    }>;
-    getProfileById(id: string, req: any): Promise<{
-        ID: any;
-        name: any;
-        noImages: string;
-        isMy: boolean;
-        images?: undefined;
-    } | {
-        ID: any;
-        name: any;
-        images: any;
-        isMy: boolean;
-        noImages?: undefined;
-    } | {
-        ID: any;
-        name: any;
-        noImages: string;
-        isMy?: undefined;
-        images?: undefined;
-    } | {
-        ID: any;
-        name: any;
-        images: any;
-        noImages?: undefined;
-        isMy?: undefined;
-    }>;
-    uploadImage(file: any, req: any): Promise<{
+    getProfile(req: any, res: any): Promise<any>;
+    getProfileById(id: string, req: any, res: any): Promise<any>;
+    uploadImage(file: any, req: any, res: any): Promise<any>;
+    deleteImage(data: DeleteImageDto): Promise<{
         message: string;
     }>;
 }

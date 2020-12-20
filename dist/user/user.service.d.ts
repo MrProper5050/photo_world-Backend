@@ -8,7 +8,13 @@ export declare class UserService {
     private imageModel;
     constructor(userModel: typeof User, imageModel: typeof Image);
     findAll(): Promise<User[]>;
-    findOne(id: string): Promise<any>;
+    findOne(id: string): Promise<{
+        id: string;
+        name: string;
+        images: any;
+        registatedIn: Date;
+        role: string;
+    }>;
     findBy(findByDto: FindByDto): Promise<User[] | {
         message: string;
     }>;
@@ -25,7 +31,7 @@ export declare class UserService {
         message: string;
     }>;
     getAllImages(): Promise<Image[]>;
-    removeImage(imageName: any): Promise<{
+    removeImage(imageName: string): Promise<{
         message: string;
     }>;
     addImage(imageName: string): Promise<void>;

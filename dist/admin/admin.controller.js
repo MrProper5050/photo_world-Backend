@@ -14,8 +14,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminController = void 0;
 const common_1 = require("@nestjs/common");
+const createUser_dto_1 = require("../user/dto/createUser.dto");
 const findBy_dto_1 = require("../user/dto/findBy.dto");
-const user_service_1 = require("../user/user.service");
 const admin_service_1 = require("./admin.service");
 let AdminController = class AdminController {
     constructor(adminService) {
@@ -35,6 +35,15 @@ let AdminController = class AdminController {
     }
     async getBy(findByDto) {
         return await this.adminService.findBy(findByDto);
+    }
+    async registration(data, resp) {
+        const result = await this.adminService.create(data);
+        if (result['message'] === "User successfully created") {
+            return resp.status(201).json(result);
+        }
+        else {
+            return resp.status(400).json(result);
+        }
     }
     removeUser(data) {
         return this.adminService.remove(data.id);
@@ -83,6 +92,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "getBy", null);
+__decorate([
+    common_1.Post('/users/reg'),
+    __param(0, common_1.Body()), __param(1, common_1.Res()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "registration", null);
 __decorate([
     common_1.Delete('/users/remove'),
     __param(0, common_1.Body()),

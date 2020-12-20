@@ -17,13 +17,13 @@ const common_1 = require("@nestjs/common");
 const sequelize_1 = require("@nestjs/sequelize");
 const sequelize_2 = require("sequelize");
 const user_model_1 = require("./user.model");
+const images_model_1 = require("./images.model");
+const path_1 = require("path");
 const shortid = require('shortid');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const config_1 = require("../config");
 const fs = require('fs');
-const path_1 = require("path");
-const images_model_1 = require("./images.model");
 let UserService = class UserService {
     constructor(userModel, imageModel) {
         this.userModel = userModel;
@@ -44,7 +44,7 @@ let UserService = class UserService {
             return { id: user.id, name: user.name, images: user.images, registatedIn: user.createdAt, role: user.role };
         }
         catch (error) {
-            return error;
+            return null;
         }
     }
     async findBy(findByDto) {
@@ -161,11 +161,8 @@ let UserService = class UserService {
             else {
                 await img.destroy();
             }
-            fs.unlink(path_1.join(__dirname, '..', '..', 'client', 'assets', 'uploads', imageName), (err) => {
-                if (err) {
-                    return;
-                }
-            });
+            fs.unlinkSync(path_1.join(__dirname, '..', '..', 'client', 'assets', 'uploads', imageName));
+            console.log(`image "${img.name}" deleted successfully`);
             return { message: 'OK' };
         }
         catch (error) {

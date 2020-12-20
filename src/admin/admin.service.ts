@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { createUserDto } from 'src/user/dto/createUser.dto';
 import { FindByDto } from 'src/user/dto/findBy.dto';
 import { UserService } from 'src/user/user.service';
 
@@ -13,6 +14,9 @@ export class AdminService {
     }
     async findBy(findByDto: FindByDto){
         return this.userService.findBy(findByDto)
+    }
+    async create(createUserDto: createUserDto){
+        return this.userService.create(createUserDto)
     }
     async remove(id: string){
         return this.userService.remove(id)

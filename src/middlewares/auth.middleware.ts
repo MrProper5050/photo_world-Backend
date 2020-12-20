@@ -30,9 +30,9 @@ export class AuthMiddleware implements NestMiddleware {
           // called if token is invalid
           return res.redirect('/')
         }
-        break;
+      break;
       default:
-        next();
+        next()
         break;
     }
     

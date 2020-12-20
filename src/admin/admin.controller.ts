@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Render, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Render, Req, Res } from '@nestjs/common';
+import { createUserDto } from 'src/user/dto/createUser.dto';
 import { FindByDto } from 'src/user/dto/findBy.dto';
-import { UserService } from 'src/user/user.service';
 import { AdminService } from './admin.service';
 
 @Controller('admin')
@@ -36,13 +36,25 @@ export class AdminController {
     async getBy(@Body() findByDto: FindByDto){
         return await this.adminService.findBy(findByDto)
     }
+    @Post('/users/reg')
+    async registration(@Body() data: createUserDto, @Res() resp){
+        // console.log('data:', data )
+        const result = await this.adminService.create(data)
+        if(result['message'] === "User successfully created") {
+            return resp.status(201).json(result)
+        }else{
+            return resp.status(400).json(result)
+        }
+
+        
+    }
     @Delete('/users/remove')
     removeUser(@Body() data){
         // console.log('id:',id)
         return this.adminService.remove(data.id)
     }
     @Delete('/users/remove/:id')
-    removeUserByIdParamUrl(@Param('id')id: string){
+    removeUserByIdParamUrl(@Param('id') id: string){
         // console.log('id:',id)
         return this.adminService.remove(id)
     }
@@ -51,7 +63,7 @@ export class AdminController {
         return this.adminService.getAllImages()
     }
     @Delete('/images/remove/:name')
-    removeImageByIdParamUrl(@Param('name')name: string){
+    removeImageByIdParamUrl(@Param('name') name: string){
         // console.log('id:',id)
         return this.adminService.removeImage(name)
     }

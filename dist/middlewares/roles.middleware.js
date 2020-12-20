@@ -25,11 +25,11 @@ let RolesMiddleware = class RolesMiddleware {
             const userId = decoded.data.id;
             const user = await this.userService.findOne(userId);
             if (user.role !== 'admin') {
-                return res.render('404');
+                return res.status(404).render('404');
             }
         }
         catch (error) {
-            return res.render('404');
+            return res.status(404).render('404');
         }
         next();
     }

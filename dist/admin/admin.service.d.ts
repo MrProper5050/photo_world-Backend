@@ -1,3 +1,4 @@
+import { createUserDto } from 'src/user/dto/createUser.dto';
 import { FindByDto } from 'src/user/dto/findBy.dto';
 import { UserService } from 'src/user/user.service';
 export declare class AdminService {
@@ -6,6 +7,10 @@ export declare class AdminService {
     findAll(): Promise<import("../user/user.model").User[]>;
     findBy(findByDto: FindByDto): Promise<import("../user/user.model").User[] | {
         message: string;
+    }>;
+    create(createUserDto: createUserDto): Promise<{
+        message: any;
+        state: string;
     }>;
     remove(id: string): Promise<{
         message: string;

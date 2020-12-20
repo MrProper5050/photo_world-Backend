@@ -17,12 +17,12 @@ export class RolesMiddleware implements NestMiddleware {
       const userId = decoded.data.id
       const user = await this.userService.findOne(userId)
       if( user.role !== 'admin') {
-        return res.render('404')
+        return res.status(404).render('404')
       }
 
     } catch (error) {
       //call if jwt is invalid or server couldn't find a user
-      return res.render('404')
+      return res.status(404).render('404')
     }
     
 

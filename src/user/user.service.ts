@@ -5,14 +5,15 @@ import { createUserDto } from './dto/createUser.dto';
 import { FindByDto } from './dto/findBy.dto';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { User } from './user.model';
+import { Image } from './images.model';
+import { join } from 'path';
 
 const shortid = require('shortid')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
 import config from '../config'
 const fs = require('fs')
-import { join } from 'path';
-import { Image } from './images.model';
+
 
 
 @Injectable()
@@ -36,7 +37,7 @@ export class UserService {
             return { id: user.id, name: user.name, images: user.images, registatedIn: user.createdAt, role: user.role };
             
         } catch (error) {
-            return error
+            return null
         }
         
     }
@@ -160,7 +161,7 @@ export class UserService {
         
     }
 
-    async removeImage(imageName){
+    async removeImage(imageName: string){
         console.log(imageName)
         try {
             //update user.images
@@ -186,10 +187,11 @@ export class UserService {
             }
 
             //delete from system
-            fs.unlink(join(__dirname,'..','..','client','assets','uploads',imageName), (err)=>{
-                if( err ) {return}
-            })
+            
+            fs.unlinkSync(join(__dirname,'..','..','client','assets','uploads',imageName))
+            
 
+            console.log(`image "${img.name}" deleted successfully`)
             return {message: 'OK'}
             
         } catch (error) {
