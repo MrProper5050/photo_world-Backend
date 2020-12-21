@@ -47,6 +47,9 @@ let UserService = class UserService {
             return null;
         }
     }
+    async findOneWithParamsObject(param) {
+        return await this.userModel.findOne(param);
+    }
     async findBy(findByDto) {
         try {
             const users = await this.userModel.findAll({ where: {

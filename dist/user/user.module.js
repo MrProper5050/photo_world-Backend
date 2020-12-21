@@ -12,10 +12,10 @@ const sequelize_1 = require("@nestjs/sequelize");
 const user_model_1 = require("./user.model");
 const user_service_1 = require("./user.service");
 const user_controller_1 = require("./user.controller");
-const profile_controller_1 = require("./profile/profile.controller");
 const auth_controller_1 = require("./auth/auth.controller");
 const roles_middleware_1 = require("../middlewares/roles.middleware");
 const images_model_1 = require("./images.model");
+const profile_module_1 = require("./profile/profile.module");
 let UserModule = class UserModule {
     configure(consumer) {
         consumer.apply(roles_middleware_1.RolesMiddleware).forRoutes('admin', 'api/user/remove');
@@ -23,9 +23,9 @@ let UserModule = class UserModule {
 };
 UserModule = __decorate([
     common_1.Module({
-        imports: [sequelize_1.SequelizeModule.forFeature([user_model_1.User, images_model_1.Image])],
+        imports: [sequelize_1.SequelizeModule.forFeature([user_model_1.User, images_model_1.Image]), profile_module_1.ProfileModule],
         providers: [user_service_1.UserService],
-        controllers: [user_controller_1.UserController, profile_controller_1.ProfileController, auth_controller_1.AuthController],
+        controllers: [user_controller_1.UserController, auth_controller_1.AuthController],
         exports: [user_service_1.UserService]
     })
 ], UserModule);

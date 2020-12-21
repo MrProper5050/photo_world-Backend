@@ -15,6 +15,7 @@ export declare class UserService {
         registatedIn: Date;
         role: string;
     }>;
+    findOneWithParamsObject(param: any): Promise<User>;
     findBy(findByDto: FindByDto): Promise<User[] | {
         message: string;
     }>;

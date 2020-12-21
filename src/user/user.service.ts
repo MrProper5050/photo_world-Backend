@@ -41,7 +41,9 @@ export class UserService {
         }
         
     }
-
+    async findOneWithParamsObject(param){
+        return await this.userModel.findOne(param);
+    }
     async findBy(findByDto: FindByDto) {
         try {
             

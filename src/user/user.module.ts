@@ -3,16 +3,16 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './user.model';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { ProfileController } from './profile/profile.controller';
 import { AuthController } from './auth/auth.controller';
 import { RolesMiddleware } from '../middlewares/roles.middleware';
 import { Image } from './images.model';
+import { ProfileModule } from './profile/profile.module';
 
 
 @Module({
-  imports:[SequelizeModule.forFeature([User, Image])],
+  imports:[SequelizeModule.forFeature([User, Image]), ProfileModule],
   providers: [UserService],
-  controllers: [UserController, ProfileController, AuthController],
+  controllers: [UserController, AuthController],
   exports: [UserService]
 })
 export class UserModule implements NestModule{

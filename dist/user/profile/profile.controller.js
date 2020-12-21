@@ -21,10 +21,12 @@ const storage_config_1 = require("./storage.config");
 const user_model_1 = require("../user.model");
 const config_1 = require("../../config");
 const logger4js = require("log4js");
+const profile_service_1 = require("./profile.service");
 const logger = logger4js.getLogger();
 let ProfileController = class ProfileController {
-    constructor(userSevice) {
+    constructor(userSevice, profileService) {
         this.userSevice = userSevice;
+        this.profileService = profileService;
     }
     async getProfile(req, res) {
         const token = req.signedCookies['access_token'];
@@ -98,8 +100,14 @@ let ProfileController = class ProfileController {
             return res.status(402).json({ message: 'UPLOAD ERROR' });
         }
     }
-    async deleteImage(data) {
-        return this.userSevice.removeImage(data.imageName);
+    async deleteImage(data, req, res) {
+        let result = await this.profileService.deleteImageIsMeChecker(req.signedCookies['access_token'], data.imageName);
+        if (result === "userId do not match" || result === "ERROR 228") {
+            return res.status(402).json("delete ERROR");
+        }
+        let us_result = await this.userSevice.removeImage(data.imageName);
+        console.log(us_result);
+        return res.status(200).json(us_result);
     }
 };
 __decorate([
@@ -126,14 +134,14 @@ __decorate([
 ], ProfileController.prototype, "uploadImage", null);
 __decorate([
     common_1.Post('/deleteImage'),
-    __param(0, common_1.Body()),
+    __param(0, common_1.Body()), __param(1, common_1.Req()), __param(2, common_1.Res()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "deleteImage", null);
 ProfileController = __decorate([
     common_1.Controller('profile'),
-    __metadata("design:paramtypes", [user_service_1.UserService])
+    __metadata("design:paramtypes", [user_service_1.UserService, profile_service_1.ProfileService])
 ], ProfileController);
 exports.ProfileController = ProfileController;
 //# sourceMappingURL=profile.controller.js.map

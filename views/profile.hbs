@@ -51,8 +51,10 @@
         <div class="Popup hidden"></div>
     </main>
    
+    {{#if isMy}}
 
     <script>
+        
         const SM = document.querySelector('#server_messages');
         let popup_back = document.querySelector('.Popup-back')
         let popup = document.querySelector('.Popup')
@@ -136,7 +138,6 @@
             popup.innerHTML=''
 
             const data = {imageName: e.target.dataset.id}
-            console.log(data)
             fetch('/profile/deleteImage', { 
                 method: 'POST',
                 headers:{'Content-Type':'application/json'},
@@ -153,7 +154,7 @@
                     }
                     
             ).catch(
-                error => console.log(error) // Handle the error response object
+                error => console.error('ERROR',error) // Handle the error response object
             );
 
         }
@@ -162,6 +163,84 @@
        
        
     </script>
+
+    {{else}}
+    <script>
+        
+        const SM = document.querySelector('#server_messages');
+        let popup_back = document.querySelector('.Popup-back')
+        let popup = document.querySelector('.Popup')
+       function sendFile(e){
+            e = e || window.event
+            e.preventDefault()
+            
+            const input = document.querySelector('#file-input');
+            const file = input.files[0];
+
+            let data = new FormData()
+            data.append('file', file)
+
+            console.log(file)
+            console.log(SM)
+
+
+            let file_ex = file.name.split('.')[file.name.split('.').length - 1].toLowerCase();
+            if(file.size > 10000000)
+            {
+            return SM.innerHTML = 'file too large(max size 10MB)'
+            }
+            if(!(	file_ex === 'png' ||
+                file_ex === 'jpg' ||
+                file_ex === 'jpeg' ||
+                file_ex === 'tiff' ||
+                file_ex === 'gif' ||
+                file_ex === 'webp' ||
+                file_ex === 'svg'
+                ))
+            {
+                return SM.innerHTML = 'file extension is invalid'
+            }                        
+
+                        
+            fetch('/profile/upload', { 
+                method: 'POST',
+                body: data 
+            }).then(
+                response => response.json() // if the response is a JSON object
+            ).then(
+                success => { 
+                        console.log(success)
+                        if(success.message !== 'upload is successful'){
+                            return SM.innerHTML = success.message;
+                        }
+                        window.location.reload(true)
+                    }
+                    
+            ).catch(
+                error => console.log(error) // Handle the error response object
+            );
+
+       }
+
+        
+        document.querySelectorAll('.image-item').forEach((elem)=>{
+            elem.addEventListener('click',(e)=>{
+                console.log(e.target.name)
+               
+                popup.classList.toggle('hidden')
+                popup_back.classList.toggle('hidden')
+                popup.innerHTML+= `
+                    <img src="/assets/uploads/${e.target.name}" class="big"/>
+                `
+            })
+        })
+        popup_back.addEventListener('click',(e)=>{
+                    popup_back.classList.toggle('hidden')
+                    popup.classList.toggle('hidden')
+                    popup.innerHTML=''
+        })   
+    </script>
+    {{/if}}
     
 </body>
 </html>

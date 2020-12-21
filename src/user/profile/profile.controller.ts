@@ -7,12 +7,15 @@ import {User} from '../user.model'
 import config from '../../config'
 import * as logger4js from 'log4js'
 import { DeleteImageDto } from '../dto/deleteImage.dto';
+import { Op } from 'sequelize/types';
+import { InjectModel } from '@nestjs/sequelize';
+import { ProfileService } from './profile.service';
 const logger = logger4js.getLogger()
 
 
 @Controller('profile')
 export class ProfileController {
-    constructor(private readonly userSevice: UserService){}
+    constructor(private readonly userSevice: UserService, private readonly profileService: ProfileService){}
 
 
     @Get()
@@ -109,8 +112,16 @@ export class ProfileController {
     }
 
     @Post('/deleteImage')
-    async deleteImage(@Body() data: DeleteImageDto){
-        
-        return this.userSevice.removeImage(data.imageName)
+    async deleteImage(@Body() data: DeleteImageDto, @Req() req: any, @Res() res: any){
+        let result = await this.profileService.deleteImageIsMeChecker(req.signedCookies['access_token'], data.imageName)
+        if(result === "userId do not match" || result === "ERROR 228"){
+            return res.status(402).json("delete ERROR")
+        }
+        let us_result = await this.userSevice.removeImage(data.imageName)
+        console.log(us_result)
+        return res.status(200).json( us_result )
     }
+  
 }
+
+
